@@ -1,6 +1,8 @@
 
 package ParOrImpar;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -22,10 +24,11 @@ public class ParOrImpar implements Runnable{
     @Override
     public void run() {
         try {
-            Scanner lerDoCliente = new Scanner(this.socket.getInputStream());
-            PrintWriter mandaParaCliente = new PrintWriter(this.socket.getOutputStream(), true);
+            DataOutputStream mandaParaCliente = new DataOutputStream(this.socket.getOutputStream());
+            DataInputStream lerDoCliente = new DataInputStream(this.socket.getInputStream());
             
-            mandaParaCliente.println( this.getStringNumero( Integer.parseInt(lerDoCliente.nextLine())));
+            mandaParaCliente.writeUTF( this.getStringNumero(lerDoCliente.readInt()));
+            mandaParaCliente.flush();
             
         } catch (IOException ex) {
             Logger.getLogger(ParOrImpar.class.getName()).log(Level.SEVERE, null, ex);

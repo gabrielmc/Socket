@@ -2,6 +2,8 @@
 package calculo_IMC;
 
 import Config.Config;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -21,28 +23,27 @@ public class Cliente {
         this.altura = Double.parseDouble(ler.nextLine());
     }
             
+    public void outDados(double massaCorporea){
+        System.out.print("Seu indice de massa corporea(IMC) é: "+massaCorporea);
+    }
             
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException{
         Cliente cli = new Cliente();
         cli.menuCliente();
         
-        try{
-            Config config = new Config();
-            Socket cliente = new Socket(config.LOCALHOST, config.IP);
+        Config config = new Config();
+        Socket cliente = new Socket(config.LOCALHOST, config.IP);
 
-            PrintWriter mandaServer = new PrintWriter(cliente.getOutputStream(), true);
-            Scanner lerDoServer = new Scanner(cliente.getInputStream());
-            
-            mandaServer.println(cli.peso);
-            mandaServer.println(cli.altura);
+        DataInputStream lerDoServer = new DataInputStream(cliente.getInputStream());
+        DataOutputStream mandaParaServer = new DataOutputStream(cliente.getOutputStream());
+        
+        mandaParaServer.writeDouble(cli.peso);
+        mandaParaServer.flush();
+        
+        mandaParaServer.writeDouble(cli.altura);
+        mandaParaServer.flush();
 
-            System.out.print("Seu indice de massa corporea(IMC) é: "+lerDoServer.nextLine());
-                        
-        }catch(IOException erro){
-            erro.getStackTrace();
-        }
-        
-        
+        cli.outDados(lerDoServer.readDouble());
     }
 
 }

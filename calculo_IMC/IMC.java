@@ -1,6 +1,8 @@
 
 package calculo_IMC;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -21,13 +23,15 @@ public class IMC implements Runnable {
     @Override
     public void run(){
          try {
-            Scanner lerDoCliente = new Scanner(this.socket.getInputStream());
-            PrintWriter mandaParaCliente = new PrintWriter(this.socket.getOutputStream(), true);
+            DataOutputStream mandaParaCliente = new DataOutputStream(this.socket.getOutputStream());
+            DataInputStream lerDoCliente = new DataInputStream(this.socket.getInputStream());
             
-            double peso = Double.parseDouble(lerDoCliente.nextLine());
-            double altura = Double.parseDouble(lerDoCliente.nextLine());
             
-            mandaParaCliente.println(this.imc(peso, altura));
+            double peso = lerDoCliente.readDouble();
+            double altura = lerDoCliente.readDouble();
+            
+            mandaParaCliente.writeDouble(this.imc(peso, altura));
+            mandaParaCliente.flush();
             
         } catch (Exception e) {
             e.printStackTrace();

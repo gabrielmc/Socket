@@ -19,7 +19,7 @@ public class Servidor {
             System.out.println("Conexao Estabelecida ...");
             Thread thr = new Thread( new IMC(socket));
             thr.start();
-            System.out.println("Fim do servico pra cliente ...\n\n\n\n\n\n\n\n");
+            System.out.println("Fim do serviço pra cliente ...\n\n\n\n\n\n\n\n");
             System.out.println("Aguardando proximo ...");
         }
         
